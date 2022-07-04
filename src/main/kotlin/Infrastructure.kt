@@ -1,7 +1,12 @@
 import software.amazon.awscdk.App
 import software.amazon.awscdk.Duration
+import software.amazon.awscdk.RemovalPolicy
 import software.amazon.awscdk.Stack
 import software.amazon.awscdk.StackProps
+import software.amazon.awscdk.services.dynamodb.Attribute
+import software.amazon.awscdk.services.dynamodb.AttributeType
+import software.amazon.awscdk.services.dynamodb.BillingMode
+import software.amazon.awscdk.services.dynamodb.Table
 import software.amazon.awscdk.services.lambda.Architecture
 import software.amazon.awscdk.services.lambda.Code
 import software.amazon.awscdk.services.lambda.Function
@@ -20,13 +25,22 @@ class LambdaStack(
     props: StackProps? = null,
 ) : Stack(parent, name, props) {
     init {
-        Function.Builder.create(this, "LambdaFunction")
+        val table = Table.Builder.create(this, "UserTable")
+            .billingMode(BillingMode.PAY_PER_REQUEST)
+            .removalPolicy(RemovalPolicy.DESTROY)
+            .partitionKey(Attribute.builder().name("id").type(AttributeType.STRING).build())
+            .build()
+        
+        val function = Function.Builder.create(this, "LambdaFunction")
             .handler("LambdaFunction")
-            .code(Code.fromAsset("build/lambda/image/lambda-sdk.zip"))
+            .code(Code.fromAsset("build/lambda/image/bootstrap.zip"))
+            .environment(mapOf("USER_TABLE" to table.tableName))
             .timeout(Duration.seconds(5))
             .memorySize(1024)
             .runtime(Runtime.PROVIDED_AL2)
             .architecture(Architecture.X86_64)
             .build()
+        
+        table.grantFullAccess(function)
     }
 }

@@ -16,5 +16,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "lambda-sdk"
-// include(":common")
-// include(":infrastructure")
