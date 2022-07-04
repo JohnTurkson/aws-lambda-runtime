@@ -1,3 +1,5 @@
+package com.johnturkson.aws.runtime.infrastructure
+
 import software.amazon.awscdk.App
 import software.amazon.awscdk.Duration
 import software.amazon.awscdk.RemovalPolicy
@@ -25,15 +27,15 @@ class LambdaStack(
     props: StackProps? = null,
 ) : Stack(parent, name, props) {
     init {
-        val table = Table.Builder.create(this, "UserTable")
+        val table = Table.Builder.create(this, "ExampleTable")
             .billingMode(BillingMode.PAY_PER_REQUEST)
             .removalPolicy(RemovalPolicy.DESTROY)
             .partitionKey(Attribute.builder().name("id").type(AttributeType.STRING).build())
             .build()
         
-        val function = Function.Builder.create(this, "LambdaFunction")
-            .handler("LambdaFunction")
-            .code(Code.fromAsset("build/lambda/image/bootstrap.zip"))
+        val function = Function.Builder.create(this, "ExampleFunction")
+            .handler("com.johnturkson.aws.runtime.example.ExampleFunction")
+            .code(Code.fromAsset("../example/build/lambda/image/bootstrap.zip"))
             .environment(mapOf("USER_TABLE" to table.tableName))
             .timeout(Duration.seconds(5))
             .memorySize(1024)
