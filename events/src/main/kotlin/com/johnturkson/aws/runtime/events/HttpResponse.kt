@@ -9,19 +9,21 @@ private val json = Json {
 }
 
 @Serializable
-private data class ApiResponseData(
+private data class HttpResponseData(
     val body: String,
     val statusCode: Int,
     val isBase64Encoded: Boolean,
     val headers: Map<String, String>,
+    val cookies: List<String>,
 )
 
-fun ApiResponse(
+fun HttpResponse(
     body: String,
-    statusCode: Int,
+    statusCode: Int = 200,
     isBase64Encoded: Boolean = false,
-    headers: Map<String, String> = emptyMap(),
+    headers: Map<String, String> = mapOf("content-type" to "application/json"),
+    cookies: List<String> = emptyList(),
 ): String {
-    val response = ApiResponseData(body, statusCode, isBase64Encoded, headers)
-    return json.encodeToString(ApiResponseData.serializer(), response)
+    val response = HttpResponseData(body, statusCode, isBase64Encoded, headers, cookies)
+    return json.encodeToString(HttpResponseData.serializer(), response)
 }
