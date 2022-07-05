@@ -15,8 +15,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "lambda-sdk"
+rootProject.name = "aws-lambda-runtime"
 include(":client")
+include(":events")
 include(":bootstrap")
 include(":infrastructure")
 include(":example")

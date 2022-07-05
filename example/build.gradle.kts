@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":bootstrap"))
     ksp(project(":bootstrap"))
     implementation(project(":client"))
+    implementation(project(":events"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     implementation(platform("software.amazon.awssdk:bom:2.17.224"))
     implementation("software.amazon.awssdk:url-connection-client")

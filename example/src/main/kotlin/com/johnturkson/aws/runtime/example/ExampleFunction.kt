@@ -3,6 +3,7 @@ package com.johnturkson.aws.runtime.example
 import com.johnturkson.aws.runtime.bootstrap.Function
 import com.johnturkson.aws.runtime.client.Handler
 import com.johnturkson.aws.runtime.client.Request
+import com.johnturkson.aws.runtime.events.ApiResponse
 import com.johnturkson.aws.runtime.example.UserDefinition.UserTable
 import kotlinx.serialization.json.Json
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
@@ -39,4 +40,7 @@ object ExampleFunction : Handler {
 }
 
 @Function
-fun ExampleFunction2(request: Request) = "Hello World"
+fun ExampleFunction2(request: Request): String {
+    return ApiResponse(request.body, 400)
+}
+

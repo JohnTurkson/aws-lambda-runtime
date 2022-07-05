@@ -1,3 +1,3 @@
 package com.johnturkson.aws.runtime.client
 
-data class Request(val id: String)
+data class Request(val id: String, val body: String)

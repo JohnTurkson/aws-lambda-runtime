@@ -8,6 +8,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
@@ -32,7 +33,8 @@ class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
             }
         }
         val id = getRequestId(invocation)
-        return Request(id)
+        val body = getRequestBody(invocation)
+        return Request(id, body)
     }
     
     private suspend fun sendInvocationResponse(requestId: String, data: String) {
@@ -57,6 +59,10 @@ class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
     
     private fun getRequestId(invocation: HttpResponse): String {
         return invocation.headers["Lambda-Runtime-Aws-Request-Id"] ?: error("Missing Lambda-Runtime-Aws-Request-Id")
+    }
+    
+    private suspend fun getRequestBody(invocation: HttpResponse): String {
+        return invocation.bodyAsText()
     }
     
     private fun env(name: String): String? {
