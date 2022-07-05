@@ -5,8 +5,11 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.symbol.ClassKind.CLASS
+import com.google.devtools.ksp.symbol.ClassKind.OBJECT
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 
 class BootstrapProcessor(
     private val codeGenerator: CodeGenerator,
@@ -14,18 +17,28 @@ class BootstrapProcessor(
     private val options: Map<String, String>,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val functions = resolver.getSymbolsWithAnnotation(Function::class.qualifiedName!!)
-        val functionClasses = functions.filterIsInstance<KSClassDeclaration>().toList()
+        val handlers = resolver.getSymbolsWithAnnotation(Function::class.qualifiedName!!)
+        val handlerClasses = handlers.filterIsInstance<KSClassDeclaration>().toList()
+        val handlerFunctions = handlers.filterIsInstance<KSFunctionDeclaration>().toList()
         
         val imports = mutableSetOf(
-            "import com.johnturkson.aws.runtime.client.env",
-            "import com.johnturkson.aws.runtime.client.listen",
+            "import com.johnturkson.aws.runtime.client.Handler",
+            "import com.johnturkson.aws.runtime.client.Runtime",
         )
         
-        functionClasses.forEach { function -> imports += "import ${function.qualifiedName?.asString()}" }
+        handlerClasses.forEach { function -> imports += "import ${function.qualifiedName?.asString()}" }
+        handlerFunctions.forEach { function -> imports += "import ${function.qualifiedName?.asString()}" }
         
-        val handlers = functionClasses.joinToString(separator = "\n") { function ->
-            "\"${function.qualifiedName?.asString()}\" -> ${function.simpleName.asString()}"
+        val classReferences = handlerClasses.joinToString(separator = "\n") { function ->
+            when (function.classKind) {
+                OBJECT -> "\"${function.qualifiedName?.asString()}\" -> ${function.simpleName.asString()}"
+                CLASS -> "\"${function.qualifiedName?.asString()}\" -> ${function.simpleName.asString()}()"
+                else -> error("Unsupported handler declaration type: ${function.classKind}")
+            }
+        }
+        
+        val functionReferences = handlerFunctions.joinToString(separator = "\n") { function ->
+            "\"${function.qualifiedName?.asString()}\" -> Handler { request -> ${function.simpleName.asString()}(request) }"
         }
         
         val contents = """
@@ -34,15 +47,17 @@ class BootstrapProcessor(
             ${imports.joinToString(separator = "\n")}
             
             suspend fun main() {
-                val handler = when (env("_HANDLER")) {
-                    $handlers
+                val runtime = Runtime()
+                val handler = when (runtime.handlerName) {
+                    $classReferences
+                    $functionReferences
                     else -> error("Missing _HANDLER")
                 }
-                listen(handler)
+                runtime.listen(handler)
             }
         """.trimIndent()
         
-        if (functionClasses.isNotEmpty()) {
+        if (handlerClasses.isNotEmpty() || handlerFunctions.isNotEmpty()) {
             val bootstrap = codeGenerator.createNewFile(
                 Dependencies.ALL_FILES,
                 "com.johnturkson.aws.runtime.bootstrap.generated",

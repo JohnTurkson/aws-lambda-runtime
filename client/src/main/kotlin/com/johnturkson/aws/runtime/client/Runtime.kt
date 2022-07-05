@@ -11,59 +11,55 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-const val runtimeApiVersion = "2018-06-01"
-val httpClient = HttpClient(CIO) {
-    install(HttpTimeout)
-}
-
-suspend fun listen(handler: Handler) {
-    while (true) {
-        val request = getNextInvocation()
-        val requestId = request.headers["Lambda-Runtime-Aws-Request-Id"]
-            ?: error("Missing Lambda-Runtime-Aws-Request-Id")
-        val response = handler()
-        sendInvocationResponse(requestId, response)
-    }
-}
-
-suspend fun getNextInvocation(): HttpResponse {
-    val endpoint = getRuntimeEndpoint("runtime/invocation/next")
-    return httpClient.get(endpoint) {
-        timeout {
-            requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
+    private val httpClient: HttpClient = HttpClient(CIO) { install(HttpTimeout) }
+    private val runtimeApi by lazy { env("AWS_LAMBDA_RUNTIME_API") ?: error("Missing AWS_LAMBDA_RUNTIME_API") }
+    val handlerName by lazy { env("_HANDLER") ?: error("Missing _HANDLER") }
+    
+    suspend fun listen(handler: Handler) {
+        while (true) {
+            val request = getNextInvocation()
+            val response = handler(request)
+            sendInvocationResponse(request.id, response)
         }
     }
-}
-
-suspend fun sendInvocationResponse(requestId: String, data: String): HttpResponse {
-    val endpoint = getRuntimeEndpoint("runtime/invocation/$requestId/response")
-    return httpClient.post(endpoint) {
-        contentType(ContentType.Application.Json)
-        setBody(data)
+    
+    private suspend fun getNextInvocation(): Request {
+        val endpoint = getRuntimeEndpoint("runtime/invocation/next")
+        val invocation = httpClient.get(endpoint) {
+            timeout {
+                requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+            }
+        }
+        val id = getRequestId(invocation)
+        return Request(id)
     }
-}
-
-suspend fun sendInitializationError(data: String): HttpResponse {
-    val endpoint = getRuntimeEndpoint("runtime/init/error")
-    return httpClient.post(endpoint) {
-        contentType(ContentType.Application.Json)
-        setBody(data)
+    
+    private suspend fun sendInvocationResponse(requestId: String, data: String) {
+        val endpoint = getRuntimeEndpoint("runtime/invocation/$requestId/response")
+        httpClient.post(endpoint) {
+            contentType(ContentType.Application.Json)
+            setBody(data)
+        }
     }
-}
-
-fun getRuntimeEndpoint(path: String): String {
-    val runtimeApiEndpoint = getLambdaRuntimeApi()
-    return "http://$runtimeApiEndpoint/$runtimeApiVersion/${path.trim('/')}"
-}
-
-fun getLambdaRuntimeApi(): String {
-    return env("AWS_LAMBDA_RUNTIME_API") ?: error("Missing AWS_LAMBDA_RUNTIME_API")
-}
-
-fun getHandlerName(): String {
-    return env("_HANDLER") ?: error("Missing _HANDLER")
-}
-
-fun env(name: String): String? {
-    return System.getenv(name)
+    
+    private suspend fun sendInitializationError(data: String) {
+        val endpoint = getRuntimeEndpoint("runtime/init/error")
+        httpClient.post(endpoint) {
+            contentType(ContentType.Application.Json)
+            setBody(data)
+        }
+    }
+    
+    private fun getRuntimeEndpoint(path: String): String {
+        return "http://$runtimeApi/$runtimeApiVersion/${path.trim('/')}"
+    }
+    
+    private fun getRequestId(invocation: HttpResponse): String {
+        return invocation.headers["Lambda-Runtime-Aws-Request-Id"] ?: error("Missing Lambda-Runtime-Aws-Request-Id")
+    }
+    
+    private fun env(name: String): String? {
+        return System.getenv(name)
+    }
 }

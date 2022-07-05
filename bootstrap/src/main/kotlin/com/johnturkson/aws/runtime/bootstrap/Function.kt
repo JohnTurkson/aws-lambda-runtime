@@ -1,3 +1,4 @@
 package com.johnturkson.aws.runtime.bootstrap
 
-annotation class Function()
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+annotation class Function

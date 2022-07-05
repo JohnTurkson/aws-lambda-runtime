@@ -1,5 +1,5 @@
 package com.johnturkson.aws.runtime.client
 
-interface Handler {
-    suspend operator fun invoke(): String
+fun interface Handler {
+    suspend operator fun invoke(request: Request): String
 }

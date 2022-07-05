@@ -37,12 +37,21 @@ class LambdaStack(
             .handler("com.johnturkson.aws.runtime.example.ExampleFunction")
             .code(Code.fromAsset("../example/build/lambda/image/bootstrap.zip"))
             .environment(mapOf("USER_TABLE" to table.tableName))
-            .timeout(Duration.seconds(5))
+            .timeout(Duration.seconds(1))
             .memorySize(1024)
             .runtime(Runtime.PROVIDED_AL2)
             .architecture(Architecture.X86_64)
             .build()
         
-        table.grantFullAccess(function)
+        val function2 = Function.Builder.create(this, "ExampleFunction2")
+            .handler("com.johnturkson.aws.runtime.example.ExampleFunction2")
+            .code(Code.fromAsset("../example/build/lambda/image/bootstrap.zip"))
+            .timeout(Duration.seconds(1))
+            .memorySize(1024)
+            .runtime(Runtime.PROVIDED_AL2)
+            .architecture(Architecture.X86_64)
+            .build()
+        
+        table.grantReadWriteData(function)
     }
 }
