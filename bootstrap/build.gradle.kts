@@ -9,7 +9,7 @@ version = "1.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":client"))
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.0-1.0.6")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.10-1.0.6")
 }
 
 java {
