@@ -1,6 +1,8 @@
 package com.johnturkson.aws.runtime.example
 
-import com.johnturkson.aws.runtime.bootstrap.Function
+import com.johnturkson.aws.runtime.annotations.Function
+import com.johnturkson.aws.runtime.annotations.Memory
+import com.johnturkson.aws.runtime.annotations.Timeout
 import com.johnturkson.aws.runtime.client.Handler
 import com.johnturkson.aws.runtime.client.Request
 import com.johnturkson.aws.runtime.events.HttpResponse
@@ -40,6 +42,8 @@ object ExampleFunction : Handler {
 }
 
 @Function
+@Timeout(1)
+@Memory(1024)
 fun ExampleFunction2(request: Request): String {
     return HttpResponse(request.body, 400)
 }

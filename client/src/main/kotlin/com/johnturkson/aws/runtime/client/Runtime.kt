@@ -13,7 +13,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
-    private val httpClient: HttpClient = HttpClient(CIO) { install(HttpTimeout) }
+    private val httpClient = HttpClient(CIO) { install(HttpTimeout) }
     private val runtimeApi by lazy { env("AWS_LAMBDA_RUNTIME_API") ?: error("Missing AWS_LAMBDA_RUNTIME_API") }
     val handlerName by lazy { env("_HANDLER") ?: error("Missing _HANDLER") }
     

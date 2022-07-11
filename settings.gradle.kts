@@ -19,5 +19,7 @@ rootProject.name = "aws-lambda-runtime"
 include(":client")
 include(":events")
 include(":bootstrap")
+include(":annotations")
+include(":cdk")
 include(":infrastructure")
 include(":example")

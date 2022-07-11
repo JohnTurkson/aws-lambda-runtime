@@ -10,6 +10,7 @@ import com.google.devtools.ksp.symbol.ClassKind.OBJECT
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.johnturkson.aws.runtime.annotations.Function
 
 class BootstrapProcessor(
     private val codeGenerator: CodeGenerator,
@@ -20,6 +21,7 @@ class BootstrapProcessor(
         val handlers = resolver.getSymbolsWithAnnotation(Function::class.qualifiedName!!)
         val handlerClasses = handlers.filterIsInstance<KSClassDeclaration>().toList()
         val handlerFunctions = handlers.filterIsInstance<KSFunctionDeclaration>().toList()
+        val generatedPackageName = "com.johnturkson.aws.runtime.generated.bootstrap"
         
         val imports = mutableSetOf(
             "import com.johnturkson.aws.runtime.client.Handler",
@@ -42,7 +44,7 @@ class BootstrapProcessor(
         }
         
         val contents = """
-            package com.johnturkson.aws.runtime.bootstrap.generated
+            package $generatedPackageName
             
             ${imports.joinToString(separator = "\n")}
             
@@ -60,7 +62,7 @@ class BootstrapProcessor(
         if (handlerClasses.isNotEmpty() || handlerFunctions.isNotEmpty()) {
             val bootstrap = codeGenerator.createNewFile(
                 Dependencies.ALL_FILES,
-                "com.johnturkson.aws.runtime.bootstrap.generated",
+                generatedPackageName,
                 "Bootstrap"
             )
             bootstrap.bufferedWriter().use { writer -> writer.write(contents) }

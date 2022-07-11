@@ -1,17 +1,10 @@
 plugins {
     kotlin("jvm")
-    id("com.google.devtools.ksp")
     `maven-publish`
 }
 
 group = "com.johnturkson.aws.runtime"
 version = "1.0-SNAPSHOT"
-
-dependencies {
-    api(project(":annotations"))
-    implementation(project(":client"))
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.10-1.0.6")
-}
 
 java {
     toolchain {
