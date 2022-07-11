@@ -12,7 +12,7 @@ version = "1.0-SNAPSHOT"
 dependencies {
     implementation(project(":bootstrap"))
     ksp(project(":bootstrap"))
-    implementation(project(":cdk"))
+    compileOnly(project(":cdk"))
     ksp(project(":cdk"))
     implementation(project(":client"))
     implementation(project(":events"))

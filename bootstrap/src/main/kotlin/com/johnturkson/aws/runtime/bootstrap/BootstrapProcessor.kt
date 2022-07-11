@@ -60,8 +60,12 @@ class BootstrapProcessor(
         """.trimIndent()
         
         if (handlerClasses.isNotEmpty() || handlerFunctions.isNotEmpty()) {
+            val files = listOf(handlerClasses, handlerFunctions)
+                .flatten()
+                .mapNotNull { resource -> resource.containingFile }
+            val dependencies = Dependencies(true, *files.toTypedArray())
             val bootstrap = codeGenerator.createNewFile(
-                Dependencies.ALL_FILES,
+                dependencies,
                 generatedPackageName,
                 "Bootstrap"
             )

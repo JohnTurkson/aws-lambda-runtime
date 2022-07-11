@@ -33,14 +33,14 @@ class FunctionProcessor(
     }
     
     @OptIn(KspExperimental::class)
-    private fun generateFunctionClass(resourceClass: KSDeclaration) {
-        val resourceClassName = resourceClass.simpleName.asString()
+    private fun generateFunctionClass(handlerClass: KSDeclaration) {
+        val resourceClassName = handlerClass.simpleName.asString()
         val generatedPackageName = requireNotNull(options["OUTPUT_LOCATION"]) + ".infrastructure"
-        val handlerName = resourceClass.qualifiedName?.asString()
+        val handlerName = handlerClass.qualifiedName?.asString()
         val handlerLocation = requireNotNull(options["HANDLER_LOCATION"])
         
-        val timeout = resourceClass.getAnnotationsByType(Timeout::class).firstOrNull()
-        val memory = resourceClass.getAnnotationsByType(Memory::class).firstOrNull()
+        val timeout = handlerClass.getAnnotationsByType(Timeout::class).firstOrNull()
+        val memory = handlerClass.getAnnotationsByType(Memory::class).firstOrNull()
         
         val imports = """
             import software.amazon.awscdk.Duration
@@ -85,7 +85,7 @@ class FunctionProcessor(
         """.trimIndent()
         
         val generatedResourceBuilderFile = codeGenerator.createNewFile(
-            Dependencies.ALL_FILES,
+            Dependencies(false, handlerClass.containingFile!!),
             generatedPackageName,
             resourceClassName,
             "kt"
@@ -95,7 +95,7 @@ class FunctionProcessor(
     }
     
     private fun generateFunctionsClass(
-        resourceClasses: List<KSClassDeclaration>,
+        handlerClasses: List<KSClassDeclaration>,
         handlerFunctions: List<KSFunctionDeclaration>,
     ) {
         val generatedPackageName = requireNotNull(options["OUTPUT_LOCATION"]) + ".infrastructure"
@@ -106,7 +106,7 @@ class FunctionProcessor(
             import software.constructs.Construct
         """.trimIndent()
         
-        val builders = listOf(resourceClasses, handlerFunctions)
+        val builders = listOf(handlerClasses, handlerFunctions)
             .flatten()
             .map { handler -> handler.simpleName.asString() }
             .distinct()
@@ -114,7 +114,7 @@ class FunctionProcessor(
                 "add($function.builder(construct, configuration))"
             }
         
-        val functions = listOf(resourceClasses, handlerFunctions)
+        val functions = listOf(handlerClasses, handlerFunctions)
             .flatten()
             .map { handler -> handler.simpleName.asString() }
             .distinct()
@@ -142,8 +142,12 @@ class FunctionProcessor(
             }
         """.trimIndent()
         
+        val files = listOf(handlerClasses, handlerFunctions)
+            .flatten()
+            .mapNotNull { resource -> resource.containingFile }
+        val dependencies = Dependencies(true, *files.toTypedArray())
         val generatedResourceBuilderFile = codeGenerator.createNewFile(
-            Dependencies.ALL_FILES,
+            dependencies,
             generatedPackageName,
             generatedClassName,
             "kt"
