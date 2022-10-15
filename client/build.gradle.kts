@@ -9,10 +9,10 @@ group = "com.johnturkson.aws.runtime"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-    implementation("io.ktor:ktor-client-cio:2.0.3")
-    implementation("io.ktor:ktor-client-cio-jvm:2.0.3")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.10-1.0.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("io.ktor:ktor-client-cio:2.1.2")
+    implementation("io.ktor:ktor-client-cio-jvm:2.1.2")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.7")
 }
 
 java {

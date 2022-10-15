@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":example"))
-    implementation("software.amazon.awscdk:aws-cdk-lib:2.31.1")
+    implementation("software.amazon.awscdk:aws-cdk-lib:2.46.0")
 }
 
 application {

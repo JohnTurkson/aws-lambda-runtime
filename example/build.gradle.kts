@@ -16,8 +16,8 @@ dependencies {
     ksp(project(":cdk"))
     implementation(project(":client"))
     implementation(project(":events"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.31.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.46.0")
     implementation(platform("software.amazon.awssdk:bom:2.17.224"))
     implementation("software.amazon.awssdk:url-connection-client")
     implementation("software.amazon.awssdk:dynamodb-enhanced") {
