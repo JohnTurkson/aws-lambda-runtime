@@ -11,6 +11,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.johnturkson.aws.runtime.annotations.Architecture
 import com.johnturkson.aws.runtime.annotations.Function
 import com.johnturkson.aws.runtime.annotations.Memory
 import com.johnturkson.aws.runtime.annotations.Timeout
@@ -41,6 +42,7 @@ class FunctionProcessor(
         
         val timeout = handlerClass.getAnnotationsByType(Timeout::class).firstOrNull()
         val memory = handlerClass.getAnnotationsByType(Memory::class).firstOrNull()
+        val architecture = handlerClass.getAnnotationsByType(Architecture::class).firstOrNull()
         
         val imports = """
             import software.amazon.awscdk.Duration
@@ -64,7 +66,7 @@ class FunctionProcessor(
                         .handler("$handlerName")
                         .code(Code.fromAsset("$handlerLocation"))
                         .runtime(Runtime.PROVIDED_AL2)
-                        .architecture(Architecture.X86_64)
+                        ${architecture?.let { ".architecture(Architecture.${architecture.value})" } ?: ""}
                         ${timeout?.let { ".timeout(Duration.seconds(${timeout.value}))" } ?: ""}
                         ${memory?.let { ".memorySize(${memory.value})" } ?: ""}
                         .apply(configuration)

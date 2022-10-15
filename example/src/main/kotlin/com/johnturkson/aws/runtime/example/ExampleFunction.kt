@@ -1,5 +1,6 @@
 package com.johnturkson.aws.runtime.example
 
+import com.johnturkson.aws.runtime.annotations.Architecture
 import com.johnturkson.aws.runtime.annotations.Function
 import com.johnturkson.aws.runtime.annotations.Memory
 import com.johnturkson.aws.runtime.annotations.Timeout
@@ -33,6 +34,7 @@ val dynamoDbClient = DynamoDbEnhancedClient.builder()
     .build()
 
 @Function
+@Architecture("ARM_64")
 object ExampleFunction : Handler {
     override suspend fun invoke(request: Request): String {
         val user = User(UserMetadata(Random.nextLong().toString()))
@@ -42,6 +44,7 @@ object ExampleFunction : Handler {
 }
 
 @Function
+@Architecture("ARM_64")
 @Timeout(1)
 @Memory(1024)
 fun ExampleFunction2(request: Request): String {
