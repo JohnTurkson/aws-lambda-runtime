@@ -2,11 +2,7 @@ package com.johnturkson.aws.runtime.cdk
 
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getAnnotationsByType
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
-import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
@@ -36,13 +32,13 @@ class FunctionProcessor(
     @OptIn(KspExperimental::class)
     private fun generateFunctionClass(handlerClass: KSDeclaration) {
         val resourceClassName = handlerClass.simpleName.asString()
-        val generatedPackageName = requireNotNull(options["OUTPUT_LOCATION"]) + ".infrastructure"
+        val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".infrastructure"
         val handlerName = handlerClass.qualifiedName?.asString()
-        val handlerLocation = requireNotNull(options["HANDLER_LOCATION"])
+        val handlerPath = requireNotNull(options["HANDLER_PATH"])
         
+        val architecture = handlerClass.getAnnotationsByType(Architecture::class).firstOrNull()
         val timeout = handlerClass.getAnnotationsByType(Timeout::class).firstOrNull()
         val memory = handlerClass.getAnnotationsByType(Memory::class).firstOrNull()
-        val architecture = handlerClass.getAnnotationsByType(Architecture::class).firstOrNull()
         
         val imports = """
             import software.amazon.awscdk.Duration
@@ -64,7 +60,7 @@ class FunctionProcessor(
                 fun builder(construct: Construct, configuration: Function.Builder.() -> Unit = {}): Function.Builder {
                     return Function.Builder.create(construct, "$resourceClassName")
                         .handler("$handlerName")
-                        .code(Code.fromAsset("$handlerLocation"))
+                        .code(Code.fromAsset("$handlerPath"))
                         .runtime(Runtime.PROVIDED_AL2)
                         ${architecture?.let { ".architecture(Architecture.${architecture.value})" } ?: ""}
                         ${timeout?.let { ".timeout(Duration.seconds(${timeout.value}))" } ?: ""}
@@ -100,7 +96,7 @@ class FunctionProcessor(
         handlerClasses: List<KSClassDeclaration>,
         handlerFunctions: List<KSFunctionDeclaration>,
     ) {
-        val generatedPackageName = requireNotNull(options["OUTPUT_LOCATION"]) + ".infrastructure"
+        val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".infrastructure"
         val generatedClassName = "Functions"
         
         val imports = """

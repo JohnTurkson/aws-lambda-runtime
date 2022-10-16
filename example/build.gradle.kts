@@ -46,8 +46,8 @@ java {
 }
 
 ksp {
-    arg("OUTPUT_LOCATION", "$group.generated")
-    arg("HANDLER_LOCATION", "../example/build/lambda/image/bootstrap.zip")
+    arg("OUTPUT_PACKAGE", "$group.generated")
+    arg("HANDLER_PATH", "../${project.name}/build/native/nativeCompile")
 }
 
 graalvmNative {
@@ -63,11 +63,4 @@ graalvmNative {
             buildArgs.add("--initialize-at-build-time=org.slf4j")
         }
     }
-}
-
-tasks.register<Zip>("buildLambdaImage") {
-    dependsOn("nativeCompile")
-    archiveFileName.set("bootstrap.zip")
-    destinationDirectory.set(file("$buildDir/lambda/image"))
-    from("$buildDir/native/nativeCompile")
 }
