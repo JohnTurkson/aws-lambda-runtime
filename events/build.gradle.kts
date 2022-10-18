@@ -8,7 +8,7 @@ group = "com.johnturkson.aws.runtime"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 }
 
 java {

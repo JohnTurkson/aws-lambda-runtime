@@ -16,7 +16,7 @@ dependencies {
     ksp(project(":cdk"))
     implementation(project(":client"))
     implementation(project(":events"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     compileOnly("software.amazon.awscdk:aws-cdk-lib:2.46.0")
     implementation(platform("software.amazon.awssdk:bom:2.17.292"))
     implementation("software.amazon.awssdk:url-connection-client")
