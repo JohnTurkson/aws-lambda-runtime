@@ -1,6 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
     `maven-publish`
 }
@@ -33,8 +32,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/JohnTurkson/aws-lambda-runtime")
             credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: project.property("githubActor")?.toString()
-                password = System.getenv("GITHUB_TOKEN") ?: project.property("githubToken")?.toString()
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
