@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm")
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
     `maven-publish`
 }
@@ -9,7 +10,7 @@ version = "1.0-SNAPSHOT"
 
 dependencies {
     api(project(":annotations"))
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.7")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.7.21-1.0.8")
     implementation("com.squareup:kotlinpoet:1.12.0")
 }
 
@@ -29,14 +30,11 @@ publishing {
     
     repositories {
         maven {
-            name = "GitLabPackages"
-            url = uri("https://gitlab.com/api/v4/projects/${System.getenv("GITLAB_PROJECT_ID")}/packages/maven")
-            authentication {
-                create<HttpHeaderAuthentication>("header")
-            }
-            credentials(HttpHeaderCredentials::class) {
-                name = "Deploy-Token"
-                value = System.getenv("GITLAB_PUBLISHING_TOKEN")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/JohnTurkson/aws-lambda-runtime")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: project.property("githubActor")?.toString()
+                password = System.getenv("GITHUB_TOKEN") ?: project.property("githubToken")?.toString()
             }
         }
     }

@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
     id("org.graalvm.buildtools.native")
     application
@@ -17,8 +17,8 @@ dependencies {
     implementation(project(":client"))
     implementation(project(":events"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.46.0")
-    implementation(platform("software.amazon.awssdk:bom:2.17.292"))
+    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.55.1")
+    implementation(platform("software.amazon.awssdk:bom:2.19.4"))
     implementation("software.amazon.awssdk:url-connection-client")
     implementation("software.amazon.awssdk:dynamodb-enhanced") {
         exclude("software.amazon.awssdk", "netty-nio-client")
