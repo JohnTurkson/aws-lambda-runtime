@@ -33,8 +33,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/JohnTurkson/aws-lambda-runtime")
             credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: project.property("githubActor")?.toString()
-                password = System.getenv("GITHUB_TOKEN") ?: project.property("githubToken")?.toString()
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
