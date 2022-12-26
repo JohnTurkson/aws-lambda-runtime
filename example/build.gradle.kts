@@ -2,12 +2,13 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
-    id("org.graalvm.buildtools.native")
+    id("com.johnturkson.graalvm")
+    id("com.johnturkson.toolchain")
     application
 }
 
 group = "com.johnturkson.aws.runtime"
-version = "1.0-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":bootstrap"))
@@ -35,13 +36,6 @@ kotlin {
         main {
             kotlin.srcDir("build/generated/ksp/main/kotlin")
         }
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-        vendor.set(JvmVendorSpec.GRAAL_VM)
     }
 }
 

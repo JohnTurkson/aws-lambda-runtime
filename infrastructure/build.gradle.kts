@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm")
+    id("org.jetbrains.kotlin.jvm")
+    id("com.johnturkson.toolchain")
     application
 }
 
@@ -10,11 +11,4 @@ dependencies {
 
 application {
     mainClass.set("com.johnturkson.aws.runtime.infrastructure.InfrastructureKt")
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-        vendor.set(JvmVendorSpec.GRAAL_VM)
-    }
 }
