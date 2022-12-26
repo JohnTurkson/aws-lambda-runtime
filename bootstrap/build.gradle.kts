@@ -10,7 +10,7 @@ group = "com.johnturkson.aws.runtime"
 version = "1.0.0-SNAPSHOT"
 
 dependencies {
-    api(project(":annotations"))
+    implementation(project(":annotations"))
     implementation(project(":client"))
     implementation("com.google.devtools.ksp:symbol-processing-api:1.7.21-1.0.8")
 }
