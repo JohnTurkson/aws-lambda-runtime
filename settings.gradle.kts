@@ -1,10 +1,8 @@
 pluginManagement {
     plugins {
-        id("org.jetbrains.kotlin.jvm") version "1.7.21"
-        id("org.jetbrains.kotlin.plugin.serialization") version "1.7.21"
-        id("com.google.devtools.ksp") version "1.7.21-1.0.8"
-        id("com.johnturkson.graalvm") version "1.0.0-SNAPSHOT"
-        id("com.johnturkson.toolchain") version "1.0.0-SNAPSHOT"
+        id("com.johnturkson.kotlin") version "1.0.0-SNAPSHOT"
+        id("com.johnturkson.aws.lambda") version "1.0.0-SNAPSHOT"
+        id("com.johnturkson.aws.cdk") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.publishing") version "1.0.0-SNAPSHOT"
     }
     

@@ -1,6 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("com.johnturkson.toolchain")
+    id("com.johnturkson.kotlin")
     id("com.johnturkson.publishing")
 }
 

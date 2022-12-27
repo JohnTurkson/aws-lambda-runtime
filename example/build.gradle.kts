@@ -1,60 +1,16 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.google.devtools.ksp")
-    id("com.johnturkson.graalvm")
-    id("com.johnturkson.toolchain")
-    application
+    id("com.johnturkson.aws.lambda")
+    id("com.johnturkson.aws.cdk")
 }
 
 group = "com.johnturkson.aws.runtime"
 version = "1.0.0-SNAPSHOT"
 
 dependencies {
-    implementation(project(":bootstrap"))
-    ksp(project(":bootstrap"))
-    compileOnly(project(":cdk"))
-    ksp(project(":cdk"))
-    implementation(project(":client"))
-    implementation(project(":events"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.55.1")
     implementation(platform("software.amazon.awssdk:bom:2.19.4"))
     implementation("software.amazon.awssdk:url-connection-client")
     implementation("software.amazon.awssdk:dynamodb-enhanced") {
         exclude("software.amazon.awssdk", "netty-nio-client")
         exclude("software.amazon.awssdk", "apache-client")
-    }
-}
-
-application {
-    mainClass.set("com.johnturkson.aws.runtime.generated.bootstrap.BootstrapKt")
-}
-
-kotlin {
-    sourceSets {
-        main {
-            kotlin.srcDir("build/generated/ksp/main/kotlin")
-        }
-    }
-}
-
-ksp {
-    arg("OUTPUT_PACKAGE", "$group.generated")
-    arg("HANDLER_PATH", "../${project.name}/build/native/nativeCompile")
-}
-
-graalvmNative {
-    binaries {
-        named("main") {
-            verbose.set(true)
-            fallback.set(false)
-            imageName.set("bootstrap")
-            mainClass.set("com.johnturkson.aws.runtime.generated.bootstrap.BootstrapKt")
-            buildArgs.add("--enable-url-protocols=http")
-            buildArgs.add("--initialize-at-build-time=kotlin,kotlinx")
-            buildArgs.add("--initialize-at-build-time=io.ktor")
-            buildArgs.add("--initialize-at-build-time=org.slf4j")
-        }
     }
 }
