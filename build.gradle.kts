@@ -1,7 +1,9 @@
 plugins {
     id("com.johnturkson.kotlin") apply false
+    id("com.johnturkson.graalvm") apply false
     id("com.johnturkson.aws.lambda") apply false
     id("com.johnturkson.aws.cdk") apply false
+    id("com.johnturkson.toolchain") apply false
     id("com.johnturkson.publishing") apply false
 }
 
