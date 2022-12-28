@@ -1,10 +1,8 @@
 pluginManagement {
     plugins {
         id("com.johnturkson.kotlin") version "1.0.0-SNAPSHOT"
-        id("com.johnturkson.graalvm") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.aws.lambda") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.aws.cdk") version "1.0.0-SNAPSHOT"
-        id("com.johnturkson.toolchain") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.publishing") version "1.0.0-SNAPSHOT"
     }
     
