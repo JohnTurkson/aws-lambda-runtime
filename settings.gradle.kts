@@ -14,9 +14,9 @@ pluginManagement {
         maven {
             url = uri("https://maven.pkg.github.com/JohnTurkson/packages")
             credentials {
-                val githubActor: String? by settings
+                val githubUsername: String? by settings
                 val githubToken: String? by settings
-                username = githubActor ?: System.getenv("GITHUB_ACTOR")
+                username = githubUsername ?: System.getenv("GITHUB_USERNAME")
                 password = githubToken ?: System.getenv("GITHUB_TOKEN")
             }
         }
@@ -32,9 +32,9 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://maven.pkg.github.com/JohnTurkson/packages")
             credentials {
-                val githubActor: String? by settings
+                val githubUsername: String? by settings
                 val githubToken: String? by settings
-                username = githubActor ?: System.getenv("GITHUB_ACTOR")
+                username = githubUsername ?: System.getenv("GITHUB_USERNAME")
                 password = githubToken ?: System.getenv("GITHUB_TOKEN")
             }
         }
