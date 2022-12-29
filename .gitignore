@@ -2,4 +2,5 @@
 .fleet/
 .gradle/
 out/
+cdk.out/
 build/
