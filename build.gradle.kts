@@ -5,5 +5,5 @@ plugins {
     id("com.johnturkson.publishing") apply false
 }
 
-group = "com.johnturkson.aws.runtime"
+group = "com.johnturkson.aws.lambda"
 version = "1.0.0-SNAPSHOT"
