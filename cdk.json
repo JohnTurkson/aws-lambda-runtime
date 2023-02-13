@@ -1,3 +1,0 @@
-{
-  "app": "./gradlew example:nativeCompile infrastructure:run"
-}
