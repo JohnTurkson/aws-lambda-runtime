@@ -1,5 +1,5 @@
 plugins {
-    id("com.johnturkson.kotlin")
+    id("com.johnturkson.kotlin.jvm")
     id("com.johnturkson.publishing")
 }
 

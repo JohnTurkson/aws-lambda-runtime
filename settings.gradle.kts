@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        id("com.johnturkson.kotlin") version "1.0.0-SNAPSHOT"
+        id("com.johnturkson.kotlin.jvm") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.aws.lambda") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.aws.cdk") version "1.0.0-SNAPSHOT"
         id("com.johnturkson.publishing") version "1.0.0-SNAPSHOT"
@@ -23,7 +23,6 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()

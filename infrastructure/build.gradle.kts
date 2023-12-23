@@ -1,6 +1,6 @@
 plugins {
+    id("com.johnturkson.kotlin.jvm")
     id("org.gradle.application")
-    id("com.johnturkson.kotlin")
 }
 
 dependencies {
