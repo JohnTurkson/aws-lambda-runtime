@@ -6,6 +6,7 @@ pluginManagement {
     }
     
     repositories {
+        mavenLocal()
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -23,6 +24,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
         maven {
@@ -37,9 +39,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "aws-lambda-runtime"
-include(":annotations")
-include(":bootstrap")
+
+rootProject.name = "aws-lambda-runtime-example"
+includeBuild("..")
+include(":functions")
 include(":cdk")
-include(":client")
-include(":events")

@@ -1,4 +1,4 @@
-package com.johnturkson.aws.runtime.example
+package com.johnturkson.aws.runtime.example.functions
 
 import com.johnturkson.aws.runtime.annotations.Function
 import com.johnturkson.aws.runtime.annotations.Memory
@@ -6,7 +6,7 @@ import com.johnturkson.aws.runtime.annotations.Timeout
 import com.johnturkson.aws.runtime.client.Handler
 import com.johnturkson.aws.runtime.client.Request
 import com.johnturkson.aws.runtime.events.HttpResponse
-import com.johnturkson.aws.runtime.example.UserDefinition.UserTable
+import com.johnturkson.aws.runtime.example.functions.UserDefinition.UserTable
 import kotlinx.serialization.json.Json
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
 import software.amazon.awssdk.awscore.defaultsmode.DefaultsMode

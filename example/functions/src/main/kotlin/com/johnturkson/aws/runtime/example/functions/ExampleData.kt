@@ -1,4 +1,4 @@
-package com.johnturkson.aws.runtime.example
+package com.johnturkson.aws.runtime.example.functions
 
 import kotlinx.serialization.Serializable
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable

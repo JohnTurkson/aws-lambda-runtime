@@ -1,7 +1,7 @@
-.idea/
 .fleet/
 .gradle/
-out/
-cdk.out/
+.idea/
 build/
+cdk.out/
+out/
 local.properties
