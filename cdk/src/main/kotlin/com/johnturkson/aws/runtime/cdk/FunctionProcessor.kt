@@ -51,7 +51,7 @@ class FunctionProcessor(
             import software.amazon.awscdk.services.lambda.Runtime
             import software.constructs.Construct
             import javax.annotation.processing.Generated
-        """.trimIndent()
+        """.trim()
         
         val generatedClass = """
             package $generatedPackageName
