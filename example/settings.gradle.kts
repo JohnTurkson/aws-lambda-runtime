@@ -2,7 +2,6 @@ pluginManagement {
     plugins {
         id("com.johnturkson.graalvm") version "1.0.0-SNAPSHOT" apply false
         id("com.johnturkson.kotlin.jvm") version "1.0.0-SNAPSHOT" apply false
-        id("com.johnturkson.publishing") version "1.0.0-SNAPSHOT" apply false
     }
     
     repositories {
