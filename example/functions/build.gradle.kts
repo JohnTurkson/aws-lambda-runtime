@@ -1,6 +1,7 @@
 plugins {
     id("com.johnturkson.graalvm")
     id("com.johnturkson.kotlin.jvm")
+    id("org.gradle.idea")
 }
 
 group = "com.johnturkson.aws.lambda.runtime.example"
@@ -37,6 +38,12 @@ graalvmNative {
             buildArgs.add("--initialize-at-build-time=io.ktor")
             buildArgs.add("--initialize-at-build-time=org.slf4j")
         }
+    }
+}
+
+idea {
+    module {
+        generatedSourceDirs.add(file("build/generated/ksp/main/kotlin"))
     }
 }
 
