@@ -36,7 +36,7 @@ class FunctionProcessor(
     private fun generateFunctionClass(handlerClass: KSDeclaration) {
         val resourceClassName = handlerClass.simpleName.asString()
         val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".functions"
-        val handlerName = handlerClass.qualifiedName?.asString()
+        val handlerName = handlerClass.qualifiedName!!.asString()
         val handlerPath = requireNotNull(options["HANDLER_PATH"])
         
         val architecture = handlerClass.getAnnotationsByType(Architecture::class).firstOrNull()
@@ -50,6 +50,7 @@ class FunctionProcessor(
             import software.amazon.awscdk.services.lambda.Function
             import software.amazon.awscdk.services.lambda.Runtime
             import software.constructs.Construct
+            import javax.annotation.processing.Generated
         """.trimIndent()
         
         val generatedClass = """
@@ -57,6 +58,10 @@ class FunctionProcessor(
             
             $imports
             
+            /**
+            * @see $handlerName
+            */
+            @Generated
             class $resourceClassName {
                 companion object Builder {
                     fun create(scope: Construct, id: String = "$resourceClassName"): Function.Builder {
