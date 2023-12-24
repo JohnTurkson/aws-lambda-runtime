@@ -1,6 +1,6 @@
 package com.johnturkson.aws.runtime.infrastructure
 
-import com.johnturkson.aws.lambda.generated.infrastructure.ExampleFunction
+import com.johnturkson.aws.lambda.runtime.generated.functions.ExampleFunction
 import software.amazon.awscdk.App
 import software.amazon.awscdk.RemovalPolicy
 import software.amazon.awscdk.Stack

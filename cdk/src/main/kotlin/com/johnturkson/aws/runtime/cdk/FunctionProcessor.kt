@@ -35,7 +35,7 @@ class FunctionProcessor(
     @OptIn(KspExperimental::class)
     private fun generateFunctionClass(handlerClass: KSDeclaration) {
         val resourceClassName = handlerClass.simpleName.asString()
-        val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".infrastructure"
+        val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".functions"
         val handlerName = handlerClass.qualifiedName?.asString()
         val handlerPath = requireNotNull(options["HANDLER_PATH"])
         

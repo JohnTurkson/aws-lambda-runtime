@@ -3,7 +3,7 @@ plugins {
     id("com.johnturkson.aws.cdk")
 }
 
-group = "com.johnturkson.aws.lambda"
+group = "com.johnturkson.aws.lambda.runtime"
 version = "1.0.0-SNAPSHOT"
 
 dependencies {
