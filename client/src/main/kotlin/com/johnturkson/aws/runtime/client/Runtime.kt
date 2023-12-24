@@ -13,7 +13,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
-    private val httpClient = HttpClient(CIO) {
+    private val client = HttpClient(CIO) {
         install(HttpTimeout)
     }
     private val runtimeApi by lazy {
@@ -33,7 +33,7 @@ class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
     
     private suspend fun getNextInvocation(): Request {
         val endpoint = getRuntimeEndpoint("runtime/invocation/next")
-        val invocation = httpClient.get(endpoint) {
+        val invocation = client.get(endpoint) {
             timeout {
                 requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
             }
@@ -45,7 +45,7 @@ class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
     
     private suspend fun sendInvocationResponse(requestId: String, data: String) {
         val endpoint = getRuntimeEndpoint("runtime/invocation/$requestId/response")
-        httpClient.post(endpoint) {
+        client.post(endpoint) {
             contentType(ContentType.Application.Json)
             setBody(data)
         }
@@ -53,7 +53,7 @@ class Runtime(private val runtimeApiVersion: String = "2018-06-01") {
     
     private suspend fun sendInitializationError(data: String) {
         val endpoint = getRuntimeEndpoint("runtime/init/error")
-        httpClient.post(endpoint) {
+        client.post(endpoint) {
             contentType(ContentType.Application.Json)
             setBody(data)
         }

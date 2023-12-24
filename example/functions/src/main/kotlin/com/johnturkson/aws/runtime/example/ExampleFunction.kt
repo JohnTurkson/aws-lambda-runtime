@@ -21,6 +21,7 @@ val json = Json {
     ignoreUnknownKeys = true
     encodeDefaults = true
 }
+
 val dynamoDbClient = DynamoDbEnhancedClient.builder()
     .dynamoDbClient(
         DynamoDbClient.builder()

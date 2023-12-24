@@ -2,7 +2,11 @@ package com.johnturkson.aws.runtime.cdk
 
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getAnnotationsByType
-import com.google.devtools.ksp.processing.*
+import com.google.devtools.ksp.processing.CodeGenerator
+import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
@@ -24,7 +28,6 @@ class FunctionProcessor(
         
         handlerClasses.forEach { resourceClass -> generateFunctionClass(resourceClass) }
         handlerFunctions.forEach { resourceClass -> generateFunctionClass(resourceClass) }
-        if (handlerClasses.toList().isNotEmpty()) generateFunctionsClass(handlerClasses, handlerFunctions)
         
         return emptyList()
     }
@@ -54,29 +57,16 @@ class FunctionProcessor(
             
             $imports
             
-            object $resourceClassName {
-                private val instances = mutableMapOf<Construct, Function>()
-                
-                fun builder(construct: Construct, configuration: Function.Builder.() -> Unit = {}): Function.Builder {
-                    return Function.Builder.create(construct, "$resourceClassName")
-                        .handler("$handlerName")
-                        .code(Code.fromAsset("$handlerPath"))
-                        .runtime(Runtime.PROVIDED_AL2)
-                        ${architecture?.let { ".architecture(Architecture.${architecture.value})" } ?: ""}
-                        ${timeout?.let { ".timeout(Duration.seconds(${timeout.value}))" } ?: ""}
-                        ${memory?.let { ".memorySize(${memory.value})" } ?: ""}
-                        .apply(configuration)
-                }
-                
-                fun build(construct: Construct, onRebuildBehavior: (Function) -> Unit = {}, configuration: Function.Builder.() -> Unit = {}): Function {
-                    val instance = instances[construct]
-                    return if (instance != null) {
-                        onRebuildBehavior(instance)
-                        instance
-                    } else {
-                        val function = builder(construct, configuration).build()
-                        instances[construct] = function
-                        function
+            class $resourceClassName {
+                companion object Builder {
+                    fun create(scope: Construct, id: String = "$resourceClassName"): Function.Builder {
+                        return Function.Builder.create(scope, id)
+                            .handler("$handlerName")
+                            .code(Code.fromAsset("$handlerPath"))
+                            .runtime(Runtime.PROVIDED_AL2)
+                            ${architecture?.let { ".architecture(Architecture.${architecture.value})" } ?: ""}
+                            ${timeout?.let { ".timeout(Duration.seconds(${timeout.value}))" } ?: ""}
+                            ${memory?.let { ".memorySize(${memory.value})" } ?: ""}
                     }
                 }
             }
@@ -86,68 +76,6 @@ class FunctionProcessor(
             Dependencies(false, handlerClass.containingFile!!),
             generatedPackageName,
             resourceClassName,
-            "kt"
-        )
-        
-        generatedResourceBuilderFile.bufferedWriter().use { writer -> writer.write(generatedClass) }
-    }
-    
-    private fun generateFunctionsClass(
-        handlerClasses: List<KSClassDeclaration>,
-        handlerFunctions: List<KSFunctionDeclaration>,
-    ) {
-        val generatedPackageName = requireNotNull(options["OUTPUT_PACKAGE"]) + ".infrastructure"
-        val generatedClassName = "Functions"
-        
-        val imports = """
-            import software.amazon.awscdk.services.lambda.Function
-            import software.constructs.Construct
-        """.trimIndent()
-        
-        val builders = listOf(handlerClasses, handlerFunctions)
-            .flatten()
-            .map { handler -> handler.simpleName.asString() }
-            .distinct()
-            .joinToString(separator = "\n") { function ->
-                "add($function.builder(construct, configuration))"
-            }
-        
-        val functions = listOf(handlerClasses, handlerFunctions)
-            .flatten()
-            .map { handler -> handler.simpleName.asString() }
-            .distinct()
-            .joinToString(separator = "\n") { function ->
-                "add($function.build(construct, onRebuildBehavior, configuration))"
-            }
-        
-        val generatedClass = """
-            package $generatedPackageName
-            
-            $imports
-            
-            object Functions {
-                fun builders(construct: Construct, configuration: Function.Builder.() -> Unit = {}): List<Function.Builder> {
-                    return buildList {
-                        $builders
-                    }
-                }
-            
-                fun build(construct: Construct, onRebuildBehavior: (Function) -> Unit = {}, configuration: Function.Builder.() -> Unit = {}): List<Function> {
-                    return buildList {
-                        $functions
-                    }
-                }
-            }
-        """.trimIndent()
-        
-        val files = listOf(handlerClasses, handlerFunctions)
-            .flatten()
-            .mapNotNull { resource -> resource.containingFile }
-        val dependencies = Dependencies(true, *files.toTypedArray())
-        val generatedResourceBuilderFile = codeGenerator.createNewFile(
-            dependencies,
-            generatedPackageName,
-            generatedClassName,
             "kt"
         )
         

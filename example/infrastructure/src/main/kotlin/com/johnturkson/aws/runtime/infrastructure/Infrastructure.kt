@@ -1,7 +1,6 @@
 package com.johnturkson.aws.runtime.infrastructure
 
 import com.johnturkson.aws.lambda.generated.infrastructure.ExampleFunction
-import com.johnturkson.aws.lambda.generated.infrastructure.Functions
 import software.amazon.awscdk.App
 import software.amazon.awscdk.RemovalPolicy
 import software.amazon.awscdk.Stack
@@ -21,11 +20,9 @@ fun main() {
         .partitionKey(Attribute.builder().name("id").type(AttributeType.STRING).build())
         .build()
     
-    val function = ExampleFunction.build(stack) {
-        environment(mapOf("USER_TABLE" to table.tableName))
-    }
-    
-    Functions.build(stack)
+    val function = ExampleFunction.Builder.create(stack)
+        .environment(mapOf("USER_TABLE" to table.tableName))
+        .build()
     
     table.grantReadWriteData(function)
     

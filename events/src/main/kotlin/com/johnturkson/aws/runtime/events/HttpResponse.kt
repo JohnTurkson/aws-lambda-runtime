@@ -1,6 +1,7 @@
 package com.johnturkson.aws.runtime.events
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 private val json = Json {
@@ -25,5 +26,5 @@ fun HttpResponse(
     cookies: List<String> = emptyList(),
 ): String {
     val response = HttpResponseData(body, statusCode, isBase64Encoded, headers, cookies)
-    return json.encodeToString(HttpResponseData.serializer(), response)
+    return json.encodeToString(response)
 }

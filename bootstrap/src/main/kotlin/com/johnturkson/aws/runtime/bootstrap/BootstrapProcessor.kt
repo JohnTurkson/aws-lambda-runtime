@@ -33,14 +33,14 @@ class BootstrapProcessor(
         
         val classReferences = handlerClasses.joinToString(separator = "\n") { function ->
             when (function.classKind) {
-                OBJECT -> "\"${function.qualifiedName?.asString()}\" -> ${function.simpleName.asString()}"
-                CLASS -> "\"${function.qualifiedName?.asString()}\" -> ${function.simpleName.asString()}()"
+                OBJECT -> "\"${function.qualifiedName!!.asString()}\" -> ${function.simpleName.asString()}"
+                CLASS -> "\"${function.qualifiedName!!.asString()}\" -> ${function.simpleName.asString()}()"
                 else -> error("Unsupported handler declaration type: ${function.classKind}")
             }
         }
         
         val functionReferences = handlerFunctions.joinToString(separator = "\n") { function ->
-            "\"${function.qualifiedName?.asString()}\" -> Handler { request -> ${function.simpleName.asString()}(request) }"
+            "\"${function.qualifiedName!!.asString()}\" -> Handler { request -> ${function.simpleName.asString()}(request) }"
         }
         
         val contents = """
@@ -67,7 +67,8 @@ class BootstrapProcessor(
             val bootstrap = codeGenerator.createNewFile(
                 dependencies,
                 generatedPackageName,
-                "Bootstrap"
+                "Bootstrap",
+                "kt"
             )
             bootstrap.bufferedWriter().use { writer -> writer.write(contents) }
         }
