@@ -9,7 +9,6 @@ import com.johnturkson.aws.runtime.events.HttpResponse
 import com.johnturkson.aws.runtime.example.functions.UserDefinition.UserTable
 import kotlinx.serialization.json.Json
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
-import software.amazon.awssdk.awscore.defaultsmode.DefaultsMode
 import software.amazon.awssdk.core.SdkSystemSetting
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient
@@ -25,7 +24,6 @@ val json = Json {
 val dynamoDbClient = DynamoDbEnhancedClient.builder()
     .dynamoDbClient(
         DynamoDbClient.builder()
-            .defaultsMode(DefaultsMode.IN_REGION)
             .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
             .region(Region.of(System.getenv(SdkSystemSetting.AWS_REGION.environmentVariable())))
             .httpClientBuilder(UrlConnectionHttpClient.builder())
