@@ -12,5 +12,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.johnturkson.aws.runtime.cdk.AppKt")
+    mainClass.set("com.johnturkson.aws.runtime.example.cdk.AppKt")
 }

@@ -21,7 +21,7 @@ class BootstrapProcessor(
         val handlers = resolver.getSymbolsWithAnnotation(Function::class.qualifiedName!!)
         val handlerClasses = handlers.filterIsInstance<KSClassDeclaration>().toList()
         val handlerFunctions = handlers.filterIsInstance<KSFunctionDeclaration>().toList()
-        val generatedPackageName = "com.johnturkson.aws.runtime.generated.bootstrap"
+        val generatedPackageName = "com.johnturkson.aws.lambda.runtime.generated.bootstrap"
         
         val imports = mutableSetOf(
             "import com.johnturkson.aws.runtime.client.Handler",
