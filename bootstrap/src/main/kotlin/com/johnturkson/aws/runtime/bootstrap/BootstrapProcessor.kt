@@ -30,6 +30,7 @@ class BootstrapProcessor(
         
         handlerClasses.forEach { function -> imports += "import ${function.qualifiedName!!.asString()}" }
         handlerFunctions.forEach { function -> imports += "import ${function.qualifiedName!!.asString()}" }
+        imports += "import javax.annotation.processing.Generated"
         
         val classReferences = handlerClasses.joinToString(separator = "\n") { function ->
             when (function.classKind) {
@@ -46,6 +47,7 @@ class BootstrapProcessor(
         val packageDeclarations = "package $generatedPackageName"
         val importDeclarations = imports.joinToString(separator = "\n")
         val functionDeclarations = """
+            @Generated
             suspend fun main() {
                 val runtime = Runtime()
                 val handler = when (runtime.handlerName) {
