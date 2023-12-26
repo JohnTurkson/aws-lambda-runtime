@@ -37,6 +37,8 @@ graalvmNative {
             buildArgs.add("--initialize-at-build-time=kotlin,kotlinx")
             buildArgs.add("--initialize-at-build-time=io.ktor")
             buildArgs.add("--initialize-at-build-time=org.slf4j")
+            buildArgs.add("--strict-image-heap")
+            buildArgs.add("--static")
         }
     }
 }
