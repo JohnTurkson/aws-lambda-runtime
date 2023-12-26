@@ -43,7 +43,8 @@ class FunctionProcessor(
         val timeout = handlerClass.getAnnotationsByType(Timeout::class).firstOrNull()
         val memory = handlerClass.getAnnotationsByType(Memory::class).firstOrNull()
         
-        val imports = """
+        val packageDeclaration = "package $generatedPackageName"
+        val importDeclarations = """
             import software.amazon.awscdk.Duration
             import software.amazon.awscdk.services.lambda.Architecture
             import software.amazon.awscdk.services.lambda.Code
@@ -51,13 +52,8 @@ class FunctionProcessor(
             import software.amazon.awscdk.services.lambda.Runtime
             import software.constructs.Construct
             import javax.annotation.processing.Generated
-        """.trim()
-        
-        val generatedClass = """
-            package $generatedPackageName
-            
-            $imports
-            
+        """.trimIndent()
+        val classDeclarations = """
             /**
             * @see $handlerName
             */
@@ -77,6 +73,12 @@ class FunctionProcessor(
             }
         """.trimIndent()
         
+        val contents = listOf(
+            packageDeclaration,
+            importDeclarations,
+            classDeclarations
+        ).joinToString(separator = "\n\n", postfix = "\n")
+        
         val generatedResourceBuilderFile = codeGenerator.createNewFile(
             Dependencies(false, handlerClass.containingFile!!),
             generatedPackageName,
@@ -84,6 +86,6 @@ class FunctionProcessor(
             "kt"
         )
         
-        generatedResourceBuilderFile.bufferedWriter().use { writer -> writer.write(generatedClass) }
+        generatedResourceBuilderFile.bufferedWriter().use { writer -> writer.write(contents) }
     }
 }

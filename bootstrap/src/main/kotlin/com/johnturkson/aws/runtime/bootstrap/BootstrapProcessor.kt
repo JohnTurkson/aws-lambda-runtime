@@ -28,8 +28,8 @@ class BootstrapProcessor(
             "import com.johnturkson.aws.runtime.client.Runtime",
         )
         
-        handlerClasses.forEach { function -> imports += "import ${function.qualifiedName?.asString()}" }
-        handlerFunctions.forEach { function -> imports += "import ${function.qualifiedName?.asString()}" }
+        handlerClasses.forEach { function -> imports += "import ${function.qualifiedName!!.asString()}" }
+        handlerFunctions.forEach { function -> imports += "import ${function.qualifiedName!!.asString()}" }
         
         val classReferences = handlerClasses.joinToString(separator = "\n") { function ->
             when (function.classKind) {
@@ -43,11 +43,9 @@ class BootstrapProcessor(
             "\"${function.qualifiedName!!.asString()}\" -> Handler { request -> ${function.simpleName.asString()}(request) }"
         }
         
-        val contents = """
-            package $generatedPackageName
-            
-            ${imports.joinToString(separator = "\n")}
-            
+        val packageDeclarations = "package $generatedPackageName"
+        val importDeclarations = imports.joinToString(separator = "\n")
+        val functionDeclarations = """
             suspend fun main() {
                 val runtime = Runtime()
                 val handler = when (runtime.handlerName) {
@@ -58,6 +56,12 @@ class BootstrapProcessor(
                 runtime.listen(handler)
             }
         """.trimIndent()
+        
+        val contents = listOf(
+            packageDeclarations,
+            importDeclarations,
+            functionDeclarations
+        ).joinToString(separator = "\n\n", postfix = "\n")
         
         if (handlerClasses.isNotEmpty() || handlerFunctions.isNotEmpty()) {
             val files = listOf(handlerClasses, handlerFunctions)
