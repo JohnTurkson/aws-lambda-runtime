@@ -64,7 +64,7 @@ class FunctionProcessor(
                         return Function.Builder.create(scope, id)
                             .handler("$handlerName")
                             .code(Code.fromAsset("$handlerPath"))
-                            .runtime(Runtime.PROVIDED_AL2)
+                            .runtime(Runtime.PROVIDED_AL2023)
                             ${architecture?.let { ".architecture(Architecture.${architecture.value})" } ?: ""}
                             ${timeout?.let { ".timeout(Duration.seconds(${timeout.value}))" } ?: ""}
                             ${memory?.let { ".memorySize(${memory.value})" } ?: ""}
