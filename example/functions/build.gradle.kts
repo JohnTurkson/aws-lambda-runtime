@@ -23,7 +23,7 @@ dependencies {
         exclude("software.amazon.awssdk", "apache-client")
     }
     
-    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.64.0")
+    compileOnly("software.amazon.awscdk:aws-cdk-lib:2.118.0")
 }
 
 graalvmNative {

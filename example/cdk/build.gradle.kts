@@ -8,7 +8,7 @@ version = "1.0.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":functions"))
-    implementation("software.amazon.awscdk:aws-cdk-lib:2.64.0")
+    implementation("software.amazon.awscdk:aws-cdk-lib:2.118.0")
 }
 
 application {
