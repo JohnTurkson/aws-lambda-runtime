@@ -8,6 +8,7 @@ version = "1.0.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":functions"))
+    implementation("org.slf4j:slf4j-nop:2.0.10")
     implementation("software.amazon.awscdk:aws-cdk-lib:2.118.0")
 }
 

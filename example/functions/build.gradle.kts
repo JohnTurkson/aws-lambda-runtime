@@ -16,6 +16,8 @@ dependencies {
     implementation("com.johnturkson.aws.lambda.runtime:client")
     implementation("com.johnturkson.aws.lambda.runtime:events")
     
+    implementation("org.slf4j:slf4j-nop:2.0.10")
+    
     implementation(platform("software.amazon.awssdk:bom:2.19.4"))
     implementation("software.amazon.awssdk:url-connection-client")
     implementation("software.amazon.awssdk:dynamodb-enhanced") {
