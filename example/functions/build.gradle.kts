@@ -35,6 +35,7 @@ graalvmNative {
             fallback.set(false)
             imageName.set("bootstrap")
             mainClass.set("com.johnturkson.aws.lambda.runtime.generated.bootstrap.BootstrapKt")
+            buildArgs.add("-march=x86-64-v2")
             buildArgs.add("--enable-url-protocols=http")
             buildArgs.add("--initialize-at-build-time=kotlin,kotlinx")
             buildArgs.add("--initialize-at-build-time=io.ktor")
